@@ -20,7 +20,6 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 
 public class StafflistCommand {
 
-    // Cache voor UUID -> naam mapping om API calls te verminderen
     private static final Map<UUID, String> uuidToNameCache = new ConcurrentHashMap<>();
     private static final Map<String, UUID> playerUuidMap = new HashMap<>();
 
@@ -106,7 +105,6 @@ public class StafflistCommand {
         Map<String, List<StaffMember>> staffWithNames = new LinkedHashMap<>();
         MinecraftClient client = MinecraftClient.getInstance();
 
-        // Eerst online spelers checken
         for (Map.Entry<String, List<UUID>> entry : staffData.entrySet()) {
             String role = entry.getKey();
             List<UUID> uuids = entry.getValue();
@@ -128,13 +126,11 @@ public class StafflistCommand {
 
     private static StaffMember getPlayerNameFromUuid(UUID uuid, MinecraftClient client) {
         try {
-            // Method 1: Check cache first
             if (uuidToNameCache.containsKey(uuid)) {
                 String cachedName = uuidToNameCache.get(uuid);
                 return new StaffMember(cachedName, uuid, false);
             }
 
-            // Method 2: Check if player is currently online
             if (client.getNetworkHandler() != null) {
                 var playerListEntry = client.getNetworkHandler().getPlayerList().stream()
                         .filter(entry -> entry.getProfile().getId().equals(uuid))
@@ -147,14 +143,12 @@ public class StafflistCommand {
                 }
             }
 
-            // Method 3: Use Mojang API to get username from UUID
             String playerName = fetchUsernameFromMojang(uuid);
             if (playerName != null) {
                 uuidToNameCache.put(uuid, playerName);
                 return new StaffMember(playerName, uuid, false);
             }
 
-            // Method 4: Return unknown as last resort
             return new StaffMember("Unknown (" + uuid.toString().substring(0, 8) + "...)", uuid, true);
 
         } catch (Exception e) {
@@ -164,7 +158,6 @@ public class StafflistCommand {
 
     private static String fetchUsernameFromMojang(UUID uuid) {
         try {
-            // Mojang API endpoint voor UUID -> username
             URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", ""));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -264,7 +257,7 @@ public class StafflistCommand {
         if (member.isUnknown) {
             color = Formatting.RED;
         } else {
-            color = isOnline ? Formatting.GREEN : Formatting.YELLOW;
+            color = isOnline ? Formatting.GREEN : Formatting.GRAY;
         }
 
         MutableText hoverText = Text.literal("UUID: " + member.uuid.toString()).formatted(Formatting.GRAY);
