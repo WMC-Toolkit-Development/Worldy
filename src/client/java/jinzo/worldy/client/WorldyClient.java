@@ -1,6 +1,7 @@
 package jinzo.worldy.client;
 
 import jinzo.worldy.client.commands.StafflistCommand;
+import jinzo.worldy.client.utils.StafflistHelper;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -17,50 +18,65 @@ import java.util.Set;
 public class WorldyClient implements ClientModInitializer {
 
     private static final Set<String> previousPlayers = new HashSet<>();
+    private static volatile boolean isTargetServer = false;
 
     @Override
     public void onInitializeClient() {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        ServerInfo currentServer = minecraftClient.getCurrentServerEntry();
+        AutoConfig.register(WorldyConfig.class, JanksonConfigSerializer::new);
 
-        if (currentServer != null && currentServer.address.endsWith("worldmc.org")) {
-            AutoConfig.register(WorldyConfig.class, JanksonConfigSerializer::new);
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(StafflistCommand.register());
+        });
 
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-                dispatcher.register(StafflistCommand.register());
-            });
-
-            ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-                previousPlayers.clear();
-                if (client.getNetworkHandler() != null) {
-                    client.getNetworkHandler().getPlayerList().forEach(entry -> {
-                        previousPlayers.add(entry.getProfile().getName());
-                    });
-                }
-            });
-
-            ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-                previousPlayers.clear();
-            });
-
-            ClientTickEvents.END_CLIENT_TICK.register(client -> {
-                if (client.player == null || client.getNetworkHandler() == null) return;
-
-                Set<String> currentPlayers = new HashSet<>();
-
-                client.getNetworkHandler().getPlayerList().forEach(entry -> {
-                    currentPlayers.add(entry.getProfile().getName());
-                });
-
-                for (String playerName : previousPlayers) {
-                    if (!currentPlayers.contains(playerName) && getConfig().displayLogoutMessages) {
-                        client.player.sendMessage(Text.literal("§7[§c-§7] " + playerName), false);
-                    }
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            try {
+                ServerInfo server = client.getCurrentServerEntry();
+                if (server != null) {
+                    System.out.println("Joined server: " + server.address);
+                    isTargetServer = server.address != null && server.address.endsWith("worldmc.org");
+                } else {
+                    System.out.println("Joined server: (server entry was null)");
+                    isTargetServer = false;
                 }
 
-                previousPlayers.clear();
-                previousPlayers.addAll(currentPlayers);
-            });
+                if (isTargetServer) {
+                    StafflistHelper.loadStaffListOnJoin(client);
+                }
+            } catch (Exception e) {
+                System.err.println("Error while handling JOIN event: " + e.getMessage());
+                isTargetServer = false;
+            }
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            previousPlayers.clear();
+            isTargetServer = false;
+        });
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (!isTargetServer) return;
+
+            if (client.player == null || client.getNetworkHandler() == null) return;
+
+            Set<String> currentPlayers = new HashSet<>();
+            client.getNetworkHandler().getPlayerList().forEach(entry -> currentPlayers.add(entry.getProfile().getName()));
+
+            for (String playerName : previousPlayers) {
+                if (!currentPlayers.contains(playerName) && getConfig().displayLogoutMessages) {
+                    client.player.sendMessage(Text.literal("§7[§c-§7] " + playerName), false);
+                }
+            }
+
+            previousPlayers.clear();
+            previousPlayers.addAll(currentPlayers);
+        });
+
+        MinecraftClient mc = MinecraftClient.getInstance();
+        ServerInfo currentServer = mc.getCurrentServerEntry();
+        if (currentServer != null) {
+            System.out.println("WorldyClient initialized. Current server: " + currentServer.address);
+        } else {
+            System.out.println("WorldyClient initialized. No server connected (main menu).");
         }
     }
 
