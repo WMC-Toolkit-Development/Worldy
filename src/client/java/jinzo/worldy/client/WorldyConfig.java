@@ -7,13 +7,15 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 @Config(name = "worldy")
 public class WorldyConfig implements ConfigData {
 
-    @ConfigEntry.Category("general")
-    @ConfigEntry.Gui.Tooltip
-    public boolean displayLogoutMessages = true;
-
-    @ConfigEntry.Category("waypoints")
+    @ConfigEntry.Gui.CollapsibleObject
+    public GeneralSettings general = new GeneralSettings();
     @ConfigEntry.Gui.CollapsibleObject
     public WaypointSettings waypoint = new WaypointSettings();
+
+    public static class GeneralSettings {
+        @ConfigEntry.Gui.Tooltip
+        public boolean displayLogoutMessages = true;
+    }
 
     public static class WaypointSettings {
         @ConfigEntry.Gui.Tooltip(count = 2)

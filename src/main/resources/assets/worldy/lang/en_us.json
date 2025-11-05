@@ -1,4 +1,7 @@
 {
   "text.autoconfig.worldy.title": "Worldy Configuration",
-  "text.autoconfig.worldy.option.displayLogoutMessages": "Player logout messages"
+  "text.autoconfig.worldy.option.displayLogoutMessages": "Player logout messages",
+  "text.autoconfig.worldy.option.waypoint": "Waypoint settings",
+  "text.autoconfig.worldy.option.waypoint.enabled": "Enabled",
+  "text.autoconfig.worldy.option.waypoint.pathLength": "Path length"
 }
