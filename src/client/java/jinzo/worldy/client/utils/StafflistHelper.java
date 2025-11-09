@@ -144,10 +144,10 @@ public final class StafflistHelper {
                     String maybe = null;
                     if (client.getNetworkHandler() != null) {
                         var found = client.getNetworkHandler().getPlayerList().stream()
-                                .filter(pl -> pl.getProfile().getId().equals(uuid))
+                                .filter(pl -> pl.getProfile().id().equals(uuid))
                                 .findFirst();
                         if (found.isPresent()) {
-                            maybe = found.get().getProfile().getName();
+                            maybe = found.get().getProfile().name();
                         }
                     }
 

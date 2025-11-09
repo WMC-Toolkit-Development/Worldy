@@ -62,7 +62,7 @@ public class WorldyClient implements ClientModInitializer {
             if (client.player == null || client.getNetworkHandler() == null) return;
 
             Set<String> currentPlayers = new HashSet<>();
-            client.getNetworkHandler().getPlayerList().forEach(entry -> currentPlayers.add(entry.getProfile().getName()));
+            client.getNetworkHandler().getPlayerList().forEach(entry -> currentPlayers.add(entry.getProfile().name()));
 
             for (String playerName : previousPlayers) {
                 if (!currentPlayers.contains(playerName) && getConfig().general.displayLogoutMessages) {

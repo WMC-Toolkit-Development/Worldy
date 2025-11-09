@@ -50,7 +50,7 @@ public class WaypointCommand {
             return 0;
         }
 
-        Vec3d pos = mc.player.getPos();
+        Vec3d pos = new Vec3d(mc.player.getX(), mc.player.getY(), mc.player.getZ());
         double x = centerOfBlock(pos.x);
         double y = centerOfBlock(pos.y);
         double z = centerOfBlock(pos.z);
@@ -95,7 +95,7 @@ public class WaypointCommand {
             return 0;
         }
 
-        Vec3d base = mc.player.getPos();
+        Vec3d base = new Vec3d(mc.player.getX(), mc.player.getY(), mc.player.getZ());
         Vec3d eye = mc.player.getCameraPosVec(1.0F);
 
         double x = parseCoordinate(parts[0], base.x, eye.x);
@@ -160,12 +160,13 @@ public class WaypointCommand {
                         return;
                     }
 
-                    lastKnownPos = client.player.getPos();
+                    Vec3d pos = new Vec3d(client.player.getX(), client.player.getY(), client.player.getZ());
+                    lastKnownPos = pos;
 
                     boolean isAliveNow = !client.player.isDead() && client.player.getHealth() > 0.0F;
 
                     if (wasAlive && !isAliveNow) {
-                        Vec3d deathPos = (lastKnownPos != null) ? lastKnownPos : client.player.getPos();
+                        Vec3d deathPos = (lastKnownPos != null) ? lastKnownPos : pos;
                         WaypointManager.setLastDeath(deathPos);
                     }
 

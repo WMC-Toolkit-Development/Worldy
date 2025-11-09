@@ -88,7 +88,7 @@ public final class StafflistCommand {
     private static boolean isPlayerOnline(String playerName, MinecraftClient client) {
         if (client.getNetworkHandler() == null) return false;
         return client.getNetworkHandler().getPlayerList().stream()
-                .anyMatch(entry -> entry.getProfile().getName().equals(playerName));
+                .anyMatch(entry -> entry.getProfile().name().equals(playerName));
     }
 
     private static MutableText createRoleMessage(String displayRole, List<Staff> staffMembers) {

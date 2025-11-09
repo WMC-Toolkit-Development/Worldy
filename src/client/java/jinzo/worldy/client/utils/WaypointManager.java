@@ -44,7 +44,8 @@ public class WaypointManager {
         tickCounter++;
         if (tickCounter % 4 != 0) return;
 
-        Vec3d start = mc.player.getPos().add(0, 0.3, 0);
+        Vec3d pos = new Vec3d(mc.player.getX(), mc.player.getY(), mc.player.getZ());
+        Vec3d start = pos.add(0, 0.3, 0);
         Vec3d dir = target.subtract(start);
         double distance = dir.length();
         if (distance <= 0.001) return;
