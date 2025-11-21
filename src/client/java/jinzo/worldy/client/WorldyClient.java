@@ -14,12 +14,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class WorldyClient implements ClientModInitializer {
 
-    private static final Set<String> previousPlayers = new HashSet<>();
+    private static final Map<UUID, Text> previousPlayers = new HashMap<>();
     private static volatile boolean isTargetServer = false;
 
     @Override
@@ -58,20 +57,29 @@ public class WorldyClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!isTargetServer) return;
-
             if (client.player == null || client.getNetworkHandler() == null) return;
 
-            Set<String> currentPlayers = new HashSet<>();
-            client.getNetworkHandler().getPlayerList().forEach(entry -> currentPlayers.add(entry.getProfile().getName()));
+            Map<UUID, Text> currentPlayers = new HashMap<>();
+            client.getNetworkHandler().getPlayerList().forEach(entry -> {
+                UUID id = entry.getProfile().getId();
+                Text nameText = entry.getDisplayName() != null
+                        ? entry.getDisplayName()
+                        : Text.literal(entry.getProfile().getName());
+                currentPlayers.put(id, nameText);
+            });
 
-            for (String playerName : previousPlayers) {
-                if (!currentPlayers.contains(playerName) && getConfig().general.displayLogoutMessages) {
-                    client.player.sendMessage(Text.literal("§7[§c-§7] " + playerName), false);
+            if (getConfig().general.displayLogoutMessages) {
+                for (Map.Entry<UUID, Text> prev : previousPlayers.entrySet()) {
+                    UUID id = prev.getKey();
+                    if (!currentPlayers.containsKey(id)) {
+                        Text who = prev.getValue();
+                        Text message = Text.literal("§7[§c-§7] ").append(who);
+                        client.player.sendMessage(message, false);
+                    }
                 }
             }
-
             previousPlayers.clear();
-            previousPlayers.addAll(currentPlayers);
+            previousPlayers.putAll(currentPlayers);
 
             if (WaypointManager.isActive() && getConfig().waypoint.enabled) WaypointManager.spawnPathParticles(getConfig().waypoint.pathLength);
         });
