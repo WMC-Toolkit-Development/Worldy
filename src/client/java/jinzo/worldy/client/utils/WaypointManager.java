@@ -167,11 +167,11 @@ public class WaypointManager {
 
         try {
             Map<String, WaypointEntry> waypoints = readWaypoints();
-            if (!waypoints.containsKey(name)) {
+            if (!waypoints.containsKey(name.toLowerCase())) {
                 CommandHelper.sendError("No waypoint with that name exists.");
                 return 0;
             }
-            waypoints.remove(name);
+            waypoints.remove(name.toLowerCase());
             writeWaypoints(waypoints);
             CommandHelper.sendMessage(String.format("Deleted waypoint '%s'.", name));
             return 1;
@@ -188,11 +188,12 @@ public class WaypointManager {
             CommandHelper.sendError("Usage: /waypoint load <name>");
             return 0;
         }
+
         String name = after;
 
         try {
             Map<String, WaypointEntry> waypoints = readWaypoints();
-            WaypointEntry entry = waypoints.get(name);
+            WaypointEntry entry = waypoints.get(name.toLowerCase());
             if (entry == null) {
                 CommandHelper.sendError("No waypoint with that name exists.");
                 return 0;
@@ -224,7 +225,7 @@ public class WaypointManager {
 
             Map<String, WaypointEntry> map = new HashMap<>();
             for (Map.Entry<String, JsonElement> e : waypointsObj.entrySet()) {
-                String key = e.getKey();
+                String key = e.getKey().toLowerCase();
                 JsonElement val = e.getValue();
                 if (!val.isJsonObject()) continue;
                 JsonObject obj = val.getAsJsonObject();
