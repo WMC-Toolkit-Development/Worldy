@@ -224,7 +224,7 @@ public class WaypointManager {
 
             Map<String, WaypointEntry> map = new HashMap<>();
             for (Map.Entry<String, JsonElement> e : waypointsObj.entrySet()) {
-                String key = e.getKey().toLowerCase();
+                String key = e.getKey();
                 JsonElement val = e.getValue();
                 if (!val.isJsonObject()) continue;
                 JsonObject obj = val.getAsJsonObject();
