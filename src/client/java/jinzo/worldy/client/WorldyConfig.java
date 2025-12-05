@@ -11,6 +11,8 @@ public class WorldyConfig implements ConfigData {
     public GeneralSettings general = new GeneralSettings();
     @ConfigEntry.Gui.CollapsibleObject
     public WaypointSettings waypoint = new WaypointSettings();
+    @ConfigEntry.Gui.CollapsibleObject
+    public StaffListSettings staffList = new StaffListSettings();
 
     public static class GeneralSettings {
         @ConfigEntry.Gui.Tooltip
@@ -28,6 +30,10 @@ public class WorldyConfig implements ConfigData {
         public double lastDeathX = 0;
         public double lastDeathY = 0;
         public double lastDeathZ = 0;
+    }
+
+    public static class StaffListSettings {
+        public boolean fetchOnLogin = true;
     }
 
     @Override

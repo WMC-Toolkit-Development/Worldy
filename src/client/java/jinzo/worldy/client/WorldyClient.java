@@ -42,7 +42,7 @@ public class WorldyClient implements ClientModInitializer {
                     isTargetServer = false;
                 }
 
-                if (isTargetServer) {
+                if (isTargetServer && getConfig().staffList.fetchOnLogin) {
                     StafflistHelper.loadStaffListOnJoin(client);
                 }
             } catch (Exception e) {
