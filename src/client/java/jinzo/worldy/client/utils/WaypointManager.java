@@ -5,6 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import jinzo.worldy.client.Models.WaypointEntry;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -23,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public class WaypointManager {
     private static volatile Vec3d target = null;
@@ -118,6 +123,10 @@ public class WaypointManager {
     }
 
     public static int saveWaypoint(CommandContext<FabricClientCommandSource> ctx) {
+        if (!isActive()) {
+            CommandHelper.sendError("No waypoint active");
+            return 0;
+        }
         String input = ctx.getInput();
         String after = input.trim().substring("waypoint save".length()).trim();
         if (after.isEmpty()) {
@@ -125,30 +134,20 @@ public class WaypointManager {
             return 0;
         }
         String name = after; // allow spaces in name
-
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player == null) {
-            CommandHelper.sendError("No player present.");
-            return 0;
-        }
-
-        int xi = (int) Math.floor(player.getX());
-        int yi = (int) Math.floor(player.getY());
-        int zi = (int) Math.floor(player.getZ());
         String worldStr = getSimpleWorldName();
 
         try {
             Map<String, WaypointEntry> waypoints = readWaypoints();
 
-            if (waypoints.containsKey(name)) {
+            if (waypoints.containsKey(name.toLowerCase())) {
                 CommandHelper.sendError("A waypoint with that name already exists.");
                 return 0;
             }
 
-            WaypointEntry entry = new WaypointEntry(xi, yi, zi, worldStr);
-            waypoints.put(name, entry);
+            WaypointEntry entry = new WaypointEntry(target.x, target.y, target.z, worldStr);
+            waypoints.put(name.toLowerCase(), entry);
             writeWaypoints(waypoints);
-            CommandHelper.sendMessage(String.format("Saved waypoint '%s' at %d, %d, %d (%s).", name, xi, yi, zi, worldStr));
+            CommandHelper.sendMessage(String.format("Saved waypoint '%s' at %.2f, %.2f, %.2f (%s).", name, target.x, target.y, target.z, worldStr));
             return 1;
         } catch (Throwable t) {
             CommandHelper.sendError("Failed to save waypoint: " + t.getMessage());
@@ -199,12 +198,12 @@ public class WaypointManager {
                 return 0;
             }
 
-            double x = centerOfBlock(entry.x);
-            double y = centerOfBlock(entry.y);
-            double z = centerOfBlock(entry.z);
+            double x = centerOfBlock(entry.x());
+            double y = centerOfBlock(entry.y());
+            double z = centerOfBlock(entry.z());
             Vec3d pos = new Vec3d(x, y, z);
             setWaypoint(pos);
-            CommandHelper.sendMessage(String.format("Loaded waypoint '%s' at %.2f, %.2f, %.2f (%s).", name, x, y, z, entry.world));
+            CommandHelper.sendMessage(String.format("Loaded waypoint '%s' at %.2f, %.2f, %.2f (%s).", name, x, y, z, entry.world()));
             return 1;
         } catch (Throwable t) {
             CommandHelper.sendError("Failed to load waypoint: " + t.getMessage());
@@ -248,10 +247,10 @@ public class WaypointManager {
         JsonObject waypointsObj = new JsonObject();
         for (Map.Entry<String, WaypointEntry> e : waypoints.entrySet()) {
             JsonObject obj = new JsonObject();
-            obj.addProperty("x", e.getValue().x);
-            obj.addProperty("y", e.getValue().y);
-            obj.addProperty("z", e.getValue().z);
-            obj.addProperty("world", e.getValue().world);
+            obj.addProperty("x", e.getValue().x());
+            obj.addProperty("y", e.getValue().y());
+            obj.addProperty("z", e.getValue().z());
+            obj.addProperty("world", e.getValue().world());
             waypointsObj.add(e.getKey(), obj);
         }
         root.add("waypoints", waypointsObj);
@@ -268,21 +267,6 @@ public class WaypointManager {
         if (key.contains("nether")) return "nether";
         if (key.contains("end")) return "end";
         return "overworld";
-    }
-
-    // small data holder for JSON entries
-    private static class WaypointEntry {
-        int x;
-        int y;
-        int z;
-        String world;
-
-        WaypointEntry(int x, int y, int z, String world) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.world = world;
-        }
     }
 
     public static int setWaypointHere() {
@@ -374,5 +358,16 @@ public class WaypointManager {
                 return relativeFeet;
             }
         }
+    }
+
+    public static CompletableFuture<Suggestions> suggestWaypointNames(CommandContext<FabricClientCommandSource> ctx, SuggestionsBuilder builder) {
+        for (String name : getWaypointNames()) {
+            builder.suggest(name);
+        }
+        return builder.buildFuture();
+    }
+
+    public static Set<String> getWaypointNames() {
+        return readWaypoints().keySet();
     }
 }

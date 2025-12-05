@@ -28,10 +28,12 @@ public class WaypointCommand {
                             )
                             .then(literal("load")
                                     .then(argument("name", StringArgumentType.greedyString())
+                                            .suggests(WaypointManager::suggestWaypointNames)
                                             .executes(WaypointManager::loadWaypoint))
                             )
                             .then(literal("delete")
                                     .then(argument("name", StringArgumentType.greedyString())
+                                            .suggests(WaypointManager::suggestWaypointNames)
                                             .executes(WaypointManager::deleteWaypoint))
 
                             )
