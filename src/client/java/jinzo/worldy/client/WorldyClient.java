@@ -29,12 +29,12 @@ public class WorldyClient implements ClientModInitializer {
         AutoConfig.register(WorldyConfig.class, JanksonConfigSerializer::new);
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            StafflistCommand.register();
+            dispatcher.register(StafflistCommand.register());
             WaypointCommand.register();
 
             // Temporary commands
             // Will be removed when server decides to implement them
-            GlobalCommand.register();
+            dispatcher.register(GlobalCommand.register());
             dispatcher.register(LocalCommand.register());
             dispatcher.register(LocalCommand.registerAlias());
         });
