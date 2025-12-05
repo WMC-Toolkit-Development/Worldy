@@ -133,19 +133,19 @@ public class WaypointManager {
             CommandHelper.sendError("Usage: /waypoint save <name>");
             return 0;
         }
-        String name = after; // allow spaces in name
+        String name = after.toLowerCase(); // allow spaces in name
         String worldStr = getSimpleWorldName();
 
         try {
             Map<String, WaypointEntry> waypoints = readWaypoints();
 
-            if (waypoints.containsKey(name.toLowerCase())) {
+            if (waypoints.containsKey(name)) {
                 CommandHelper.sendError("A waypoint with that name already exists.");
                 return 0;
             }
 
             WaypointEntry entry = new WaypointEntry(target.x, target.y, target.z, worldStr);
-            waypoints.put(name.toLowerCase(), entry);
+            waypoints.put(name, entry);
             writeWaypoints(waypoints);
             CommandHelper.sendMessage(String.format("Saved waypoint '%s' at %.2f, %.2f, %.2f (%s).", name, target.x, target.y, target.z, worldStr));
             return 1;
@@ -162,15 +162,15 @@ public class WaypointManager {
             CommandHelper.sendError("Usage: /waypoint delete <name>");
             return 0;
         }
-        String name = after;
+        String name = after.toLowerCase();
 
         try {
             Map<String, WaypointEntry> waypoints = readWaypoints();
-            if (!waypoints.containsKey(name.toLowerCase())) {
+            if (!waypoints.containsKey(name)) {
                 CommandHelper.sendError("No waypoint with that name exists.");
                 return 0;
             }
-            waypoints.remove(name.toLowerCase());
+            waypoints.remove(name);
             writeWaypoints(waypoints);
             CommandHelper.sendMessage(String.format("Deleted waypoint '%s'.", name));
             return 1;
@@ -188,11 +188,11 @@ public class WaypointManager {
             return 0;
         }
 
-        String name = after;
+        String name = after.toLowerCase();
 
         try {
             Map<String, WaypointEntry> waypoints = readWaypoints();
-            WaypointEntry entry = waypoints.get(name.toLowerCase());
+            WaypointEntry entry = waypoints.get(name);
             if (entry == null) {
                 CommandHelper.sendError("No waypoint with that name exists.");
                 return 0;
