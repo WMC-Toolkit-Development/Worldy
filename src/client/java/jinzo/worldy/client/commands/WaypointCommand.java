@@ -1,14 +1,9 @@
 package jinzo.worldy.client.commands;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.context.CommandContext;
 import jinzo.worldy.client.Models.DeathTracker;
 import jinzo.worldy.client.utils.WaypointManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -22,121 +17,20 @@ public class WaypointCommand {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(
                     literal("waypoint")
-                            .then(literal("clear").executes(WaypointCommand::clearWaypoint))
-                            .then(literal("here").executes(WaypointCommand::setWaypointHere))
-                            .then(literal("death").executes(WaypointCommand::setWaypointToDeath))
+                            .then(literal("clear").executes(ctx -> WaypointManager.clearWaypoint()))
+                            .then(literal("here").executes(ctx -> WaypointManager.setWaypointHere()))
+                            .then(literal("death").executes(ctx -> WaypointManager.setWaypointToDeath()))
+                            .then(literal("info").executes(ctx -> WaypointManager.infoWaypoint()))
                             .then(literal("set")
                                     .then(argument("x", DoubleArgumentType.doubleArg())
                                             .then(argument("y", DoubleArgumentType.doubleArg())
                                                     .then(argument("z", DoubleArgumentType.doubleArg())
-                                                            .executes(WaypointCommand::setWaypointFromArgs)
+                                                            .executes(WaypointManager::setWaypointFromArgs)
                                                     )
                                             )
                                     )
                             )
             );
         });
-    }
-
-    private static int clearWaypoint(CommandContext<?> ctx) {
-        WaypointManager.clearWaypoint();
-        MinecraftClient.getInstance().player.sendMessage(Text.literal("§aWaypoint cleared."), false);
-        return 1;
-    }
-
-    private static int setWaypointHere(CommandContext<?> ctx) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player == null) {
-            return 0;
-        }
-
-        Vec3d pos = new Vec3d(mc.player.getX(), mc.player.getY(), mc.player.getZ());
-        double x = centerOfBlock(pos.x);
-        double y = centerOfBlock(pos.y);
-        double z = centerOfBlock(pos.z);
-
-        Vec3d target = new Vec3d(x, y, z);
-        WaypointManager.setWaypoint(target);
-
-        mc.player.sendMessage(Text.literal(String.format("§aWaypoint set to your position (%.2f, %.2f, %.2f).", x, y, z)), false);
-        return 1;
-    }
-
-    private static int setWaypointToDeath(CommandContext<?> ctx) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player == null) {
-            return 0;
-        }
-
-        Vec3d lastDeath = WaypointManager.getLastDeath();
-
-        double x = centerOfBlock(lastDeath.x);
-        double y = centerOfBlock(lastDeath.y);
-        double z = centerOfBlock(lastDeath.z);
-
-        Vec3d target = new Vec3d(x, y, z);
-        WaypointManager.setWaypoint(target);
-
-        mc.player.sendMessage(Text.literal(String.format("§aWaypoint set to last death (%.2f, %.2f, %.2f).", x, y, z)), false);
-        return 1;
-    }
-
-    private static int setWaypointFromArgs(CommandContext<FabricClientCommandSource> ctx) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player == null) {
-            return 0;
-        }
-
-        String input = ctx.getInput();
-        String after = input.trim().substring("waypoint set".length()).trim();
-        String[] parts = after.split("\\s+");
-        if (parts.length < 3) {
-            mc.player.sendMessage(Text.literal("§cUsage: /waypoint set <x|~> <y|~> <z|~>"), false);
-            return 0;
-        }
-
-        Vec3d base = new Vec3d(mc.player.getX(), mc.player.getY(), mc.player.getZ());
-        Vec3d eye = mc.player.getCameraPosVec(1.0F);
-
-        double x = parseCoordinate(parts[0], base.x, eye.x);
-        double y = parseCoordinate(parts[1], base.y, eye.y);
-        double z = parseCoordinate(parts[2], base.z, eye.z);
-
-        x = centerOfBlock(x);
-        y = centerOfBlock(y);
-        z = centerOfBlock(z);
-
-        Vec3d target = new Vec3d(x, y, z);
-        WaypointManager.setWaypoint(target);
-
-        mc.player.sendMessage(Text.literal(String.format("§aWaypoint set to block center (%.2f, %.2f, %.2f). Showing next 10 blocks.", x, y, z)), false);
-        return 1;
-    }
-
-    private static double centerOfBlock(double coord) {
-        return Math.floor(coord) + 0.5;
-    }
-
-    private static double parseCoordinate(String token, double relativeFeet, double relativeEye) {
-        token = token.trim();
-        if (token.startsWith("~")) {
-            if (token.length() == 1) {
-                return relativeFeet;
-            } else {
-                String off = token.substring(1);
-                try {
-                    double val = Double.parseDouble(off);
-                    return relativeFeet + val;
-                } catch (NumberFormatException e) {
-                    return relativeFeet;
-                }
-            }
-        } else {
-            try {
-                return Double.parseDouble(token);
-            } catch (NumberFormatException e) {
-                return relativeFeet;
-            }
-        }
     }
 }

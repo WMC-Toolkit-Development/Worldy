@@ -2,6 +2,7 @@ package jinzo.worldy.client.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import jinzo.worldy.client.Models.Staff;
+import jinzo.worldy.client.utils.CommandHelper;
 import jinzo.worldy.client.utils.StafflistHelper;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -26,7 +27,7 @@ public final class StafflistCommand {
 
                     Map<String, List<Staff>> data = StafflistHelper.getCachedStaffData();
                     if (data.isEmpty()) {
-                        client.player.sendMessage(Text.literal("§eStaff list not loaded yet. Fetching now...").formatted(Formatting.YELLOW), false);
+                        CommandHelper.sendWarning("Staff list not loaded yet. Fetching now...");
                         StafflistHelper.loadStaffListOnJoin(client);
                         return 1;
                     }
@@ -39,7 +40,7 @@ public final class StafflistCommand {
     private static void sendStaffList(MinecraftClient client, Map<String, List<Staff>> staffData) {
         if (staffData.isEmpty()) {
             if (client.player != null)
-                client.player.sendMessage(Text.literal("§cNo staff data found").formatted(Formatting.RED), false);
+                CommandHelper.sendError("No staff data found.");
             return;
         }
 
@@ -79,9 +80,6 @@ public final class StafflistCommand {
         if (hasUnknownPlayers) {
             if (client.player != null)
                 client.player.sendMessage(Text.literal("§cNote: Could not resolve some usernames").formatted(Formatting.RED), false);
-        } else if (hasOfflinePlayers) {
-            if (client.player != null)
-                client.player.sendMessage(Text.literal("§eNote: Some staff members are currently offline").formatted(Formatting.YELLOW), false);
         }
     }
 
