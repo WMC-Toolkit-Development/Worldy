@@ -1,5 +1,7 @@
 package jinzo.worldy.client;
 
+import jinzo.worldy.client.commands.GlobalCommand;
+import jinzo.worldy.client.commands.LocalCommand;
 import jinzo.worldy.client.commands.StafflistCommand;
 import jinzo.worldy.client.commands.WaypointCommand;
 import jinzo.worldy.client.utils.StafflistHelper;
@@ -27,8 +29,14 @@ public class WorldyClient implements ClientModInitializer {
         AutoConfig.register(WorldyConfig.class, JanksonConfigSerializer::new);
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(StafflistCommand.register());
+            StafflistCommand.register();
             WaypointCommand.register();
+
+            // Temporary commands
+            // Will be removed when server decides to implement them
+            GlobalCommand.register();
+            dispatcher.register(LocalCommand.register());
+            dispatcher.register(LocalCommand.registerAlias());
         });
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
