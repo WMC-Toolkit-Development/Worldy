@@ -2,9 +2,9 @@ package jinzo.worldy.client.commands;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import jinzo.worldy.client.Models.DeathTracker;
 import jinzo.worldy.client.utils.WaypointManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -137,44 +137,6 @@ public class WaypointCommand {
             } catch (NumberFormatException e) {
                 return relativeFeet;
             }
-        }
-    }
-
-    private static final class DeathTracker {
-        private static volatile boolean initialized = false;
-        private static boolean wasAlive = false;
-        private static Vec3d lastKnownPos = null;
-
-        private DeathTracker() {}
-
-        public static void init() {
-            if (initialized) return;
-            initialized = true;
-
-            ClientTickEvents.END_CLIENT_TICK.register(client -> {
-                try {
-                    if (client == null) return;
-                    if (client.player == null) {
-                        wasAlive = false;
-                        lastKnownPos = null;
-                        return;
-                    }
-
-                    Vec3d pos = new Vec3d(client.player.getX(), client.player.getY(), client.player.getZ());
-                    lastKnownPos = pos;
-
-                    boolean isAliveNow = !client.player.isDead() && client.player.getHealth() > 0.0F;
-
-                    if (wasAlive && !isAliveNow) {
-                        Vec3d deathPos = (lastKnownPos != null) ? lastKnownPos : pos;
-                        WaypointManager.setLastDeath(deathPos);
-                    }
-
-                    wasAlive = isAliveNow;
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
-            });
         }
     }
 }
