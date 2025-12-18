@@ -6,7 +6,10 @@
   "description": "A simple fabric mod that enhances your experience on WorldMC",
   "authors": ["Crushed_Cookie"],
   "contributors": [],
-  "contact": {},
+  "contact": {
+    "website": "https://modrinth.com/mod/worldy",
+    "issues": "https://github.com/WMC-Toolkit-Development/Worldy/issues"
+  },
   "license": "MIT",
   "icon": "assets/worldy/icon.png",
   "environment": "client",
