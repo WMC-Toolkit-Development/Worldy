@@ -26,10 +26,6 @@ public class WorldyConfig implements ConfigData {
         @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(min = 1, max = 40)
         public int pathLength = 10;
-
-        public double lastDeathX = 0;
-        public double lastDeathY = 0;
-        public double lastDeathZ = 0;
     }
 
     public static class StaffListSettings {

@@ -12,10 +12,6 @@
   "text.autoconfig.worldy.option.waypoint.pathLength": "Path length",
   "text.autoconfig.worldy.option.waypoint.pathLength.@Tooltip": "Maximum number of waypoint trail segments.",
 
-  "text.autoconfig.worldy.option.waypoint.lastDeathX": "Last death X position",
-  "text.autoconfig.worldy.option.waypoint.lastDeathY": "Last death Y position",
-  "text.autoconfig.worldy.option.waypoint.lastDeathZ": "Last death Z position",
-
   "text.autoconfig.worldy.option.staffList": "Stafflist settings",
   "text.autoconfig.worldy.option.staffList.fetchOnLogin": "Load data of staff on join"
 }

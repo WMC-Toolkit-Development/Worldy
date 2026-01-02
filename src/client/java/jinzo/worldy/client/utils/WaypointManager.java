@@ -18,6 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import me.shedaniel.autoconfig.AutoConfig;
 import jinzo.worldy.client.WorldyConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -102,23 +103,36 @@ public class WaypointManager {
 
     public static void setLastDeath(Vec3d deathPos) {
         if (deathPos == null) return;
-        saveLastDeathToConfig(deathPos);
-    }
 
-    public static Vec3d getLastDeath() {
-        WorldyConfig cfg = AutoConfig.getConfigHolder(WorldyConfig.class).getConfig();
-        return new Vec3d(cfg.waypoint.lastDeathX, cfg.waypoint.lastDeathY, cfg.waypoint.lastDeathZ);
-    }
-
-    private static void saveLastDeathToConfig(Vec3d deathPos) {
         try {
-            WorldyConfig cfg = AutoConfig.getConfigHolder(WorldyConfig.class).getConfig();
-            cfg.waypoint.lastDeathX = (int)deathPos.x;
-            cfg.waypoint.lastDeathY = (int)deathPos.y;
-            cfg.waypoint.lastDeathZ = (int)deathPos.z;
-            AutoConfig.getConfigHolder(WorldyConfig.class).save();
-        } catch (Throwable t) {
-            System.err.println("Failed to save last death to config: " + t.getMessage());
+            Files.createDirectories(WAYPOINTS_PATH.getParent());
+
+            JsonObject root;
+
+            // Read existing file if present
+            if (Files.exists(WAYPOINTS_PATH)) {
+                try (BufferedReader reader = Files.newBufferedReader(WAYPOINTS_PATH)) {
+                    root = GSON.fromJson(reader, JsonObject.class);
+                    if (root == null) root = new JsonObject();
+                }
+            } else {
+                root = new JsonObject();
+            }
+
+            JsonObject lastDeathObj = new JsonObject();
+            lastDeathObj.addProperty("x", (int) deathPos.x);
+            lastDeathObj.addProperty("y", (int) deathPos.y);
+            lastDeathObj.addProperty("z", (int) deathPos.z);
+            lastDeathObj.addProperty("world", getSimpleWorldName());
+
+            root.add("last_death", lastDeathObj);
+
+            try (BufferedWriter writer = Files.newBufferedWriter(WAYPOINTS_PATH)) {
+                GSON.toJson(root, writer);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Failed to save last death: " + e.getMessage());
         }
     }
 
@@ -211,6 +225,26 @@ public class WaypointManager {
         }
     }
 
+    private static @Nullable WaypointEntry readLastDeath() {
+        if (!Files.exists(WAYPOINTS_PATH)) return null;
+        try (BufferedReader reader = Files.newBufferedReader(WAYPOINTS_PATH)) {
+            JsonObject root = GSON.fromJson(reader, JsonObject.class);
+            if (root == null) return null;
+            JsonObject obj = root.has("last_death") && root.get("last_death").isJsonObject()
+                    ? root.getAsJsonObject("last_death")
+                    : null;
+            if (obj == null) return null;
+            int x = obj.has("x") ? obj.get("x").getAsInt() : 0;
+            int y = obj.has("y") ? obj.get("y").getAsInt() : 0;
+            int z = obj.has("z") ? obj.get("z").getAsInt() : 0;
+            String world = obj.has("world") ? obj.get("world").getAsString() : "overworld";
+            return new WaypointEntry(x, y, z, world);
+        } catch (IOException e) {
+            System.err.println("Failed to read waypoints: " + e.getMessage());
+            return null;
+        }
+    }
+
     private static @NotNull Map<String, WaypointEntry> readWaypoints() {
         if (!Files.exists(WAYPOINTS_PATH)) {
             return new HashMap<>();
@@ -288,11 +322,16 @@ public class WaypointManager {
     }
 
     public static int setWaypointToDeath() {
-        Vec3d lastDeath = WaypointManager.getLastDeath();
+        WaypointEntry lastDeath = WaypointManager.readLastDeath();
 
-        double x = centerOfBlock(lastDeath.x);
-        double y = centerOfBlock(lastDeath.y);
-        double z = centerOfBlock(lastDeath.z);
+        if (lastDeath == null) {
+            CommandHelper.sendError("No last death found.");
+            return 0;
+        }
+
+        double x = centerOfBlock(lastDeath.x());
+        double y = centerOfBlock(lastDeath.y());
+        double z = centerOfBlock(lastDeath.z());
 
         Vec3d target = new Vec3d(x, y, z);
         WaypointManager.setWaypoint(target);
@@ -329,7 +368,7 @@ public class WaypointManager {
         Vec3d target = new Vec3d(x, y, z);
         WaypointManager.setWaypoint(target);
 
-        CommandHelper.sendMessage(String.format("Waypoint set to block center (%.2f, %.2f, %.2f). Showing next 10 blocks.", x, y, z));
+        CommandHelper.sendMessage(String.format("Waypoint set (%.2f, %.2f, %.2f).", x, y, z));
         return 1;
     }
 
