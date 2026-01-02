@@ -361,8 +361,9 @@ public class WaypointManager {
     }
 
     public static CompletableFuture<Suggestions> suggestWaypointNames(CommandContext<FabricClientCommandSource> ctx, SuggestionsBuilder builder) {
+        String remaining = builder.getRemaining().toLowerCase();
         for (String name : getWaypointNames()) {
-            builder.suggest(name);
+            if (name.startsWith(remaining)) builder.suggest(name);
         }
         return builder.buildFuture();
     }
