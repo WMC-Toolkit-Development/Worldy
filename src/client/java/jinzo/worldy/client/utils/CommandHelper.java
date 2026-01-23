@@ -15,9 +15,11 @@ public class CommandHelper {
         sendMessage("§e" + message);
     }
 
-    public static void sendMessage(@NotNull String message) {
+    public static void sendMessage(@NotNull String message) {sendMessage(Text.literal(message));}
+
+    public static void sendMessage(@NotNull Text message) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return;
-        player.sendMessage(Text.literal("§3[Worldy]§7 " + message), false);
+        player.sendMessage(Text.literal("§3[Worldy]§7 ").append(message), false);
     }
 }
