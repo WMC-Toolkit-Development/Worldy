@@ -17,6 +17,8 @@ public class WorldyConfig implements ConfigData {
     public static class GeneralSettings {
         @ConfigEntry.Gui.Tooltip
         public boolean displayLogoutMessages = true;
+        @ConfigEntry.Gui.Tooltip
+        public boolean autoOpenVoteLinks = false;
     }
 
     public static class WaypointSettings {

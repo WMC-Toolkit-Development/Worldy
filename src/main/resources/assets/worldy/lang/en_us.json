@@ -4,6 +4,8 @@
   "text.autoconfig.worldy.option.general": "General settings",
   "text.autoconfig.worldy.option.general.displayLogoutMessages": "Player logout messages",
   "text.autoconfig.worldy.option.general.displayLogoutMessages.@Tooltip": "Shows a system message when players log out.",
+  "text.autoconfig.worldy.option.general.autoOpenVoteLinks": "Auto open links on \"/vote\"",
+  "text.autoconfig.worldy.option.general.autoOpenVoteLinks.@Tooltip": "Opens the links for you in your browser instantly.",
 
   "text.autoconfig.worldy.option.waypoint": "Waypoint settings",
   "text.autoconfig.worldy.option.waypoint.enabled": "Enabled",
