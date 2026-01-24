@@ -87,7 +87,7 @@ public class WorldyClient implements ClientModInitializer {
             previousPlayers.clear();
             previousPlayers.addAll(currentPlayers);
 
-            if (WaypointManager.isActive() && getConfig().waypoint.enabled) WaypointManager.spawnPathParticles(getConfig().waypoint.pathLength);
+            if (WaypointManager.active() && getConfig().waypoint.enabled) WaypointManager.spawnPathParticles(getConfig().waypoint.pathLength);
         });
 
         MinecraftClient mc = MinecraftClient.getInstance();

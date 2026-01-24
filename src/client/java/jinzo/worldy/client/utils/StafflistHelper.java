@@ -5,7 +5,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import jinzo.worldy.client.Models.Staff;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ public final class StafflistHelper {
 
     private StafflistHelper() {}
 
-    public static Map<String, List<Staff>> getCachedStaffData() {
+    public static @NotNull Map<String, List<Staff>> getCachedStaffData() {
         Map<String, List<Staff>> snapshot = new LinkedHashMap<>();
         synchronized (cachedStaffData) {
             for (var e : cachedStaffData.entrySet()) {
@@ -47,7 +47,7 @@ public final class StafflistHelper {
         return Collections.unmodifiableMap(snapshot);
     }
 
-    public static void loadStaffListOnJoin(MinecraftClient client) {
+    public static void loadStaffListOnJoin(@NotNull MinecraftClient client) {
         if (isLoading) return;
         if (lastFetched.plusSeconds(60 * 5).isAfter(Instant.now()) && !cachedStaffData.isEmpty()) return;
 
@@ -100,7 +100,7 @@ public final class StafflistHelper {
         });
     }
 
-    private static Map<String, List<UUID>> parseStaffJson(String json) {
+    private static @NotNull Map<String, List<UUID>> parseStaffJson(@NotNull String json) {
         Map<String, List<UUID>> staffData = new LinkedHashMap<>();
         try (JsonReader reader = new JsonReader(new StringReader(json))) {
             reader.setLenient(true);
@@ -135,7 +135,7 @@ public final class StafflistHelper {
         return staffData;
     }
 
-    private static void resolveUnknownNamesAsync(MinecraftClient client, Map<String, List<UUID>> staffData) {
+    private static void resolveUnknownNamesAsync(@NotNull MinecraftClient client, Map<String, @NotNull List<UUID>> staffData) {
         executor.submit(() -> {
             for (Map.Entry<String, List<UUID>> entry : staffData.entrySet()) {
                 for (UUID uuid : entry.getValue()) {
@@ -183,7 +183,7 @@ public final class StafflistHelper {
         });
     }
 
-    private static String fetchUsernameFromMojang(UUID uuid) {
+    private static @NotNull String fetchUsernameFromMojang(@NotNull UUID uuid) {
         HttpURLConnection connection = null;
         try {
             URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", ""));

@@ -1,5 +1,7 @@
 package jinzo.worldy.client.Models;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 public final class Staff {
@@ -7,17 +9,17 @@ public final class Staff {
     private final UUID uuid;
     private final boolean isUnknown;
 
-    public Staff(String displayName, UUID uuid, boolean isUnknown) {
+    public Staff(@NotNull String displayName, @NotNull UUID uuid, boolean isUnknown) {
         this.displayName = displayName;
         this.uuid = uuid;
         this.isUnknown = isUnknown;
     }
 
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return displayName;
     }
 
-    public UUID getUuid() {
+    public @NotNull UUID getUuid() {
         return uuid;
     }
 
@@ -26,7 +28,7 @@ public final class Staff {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "Staff{" +
                 "displayName='" + displayName + '\'' +
                 ", uuid=" + uuid +

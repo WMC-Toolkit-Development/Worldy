@@ -13,10 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
-import me.shedaniel.autoconfig.AutoConfig;
-import jinzo.worldy.client.WorldyConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,19 +53,20 @@ public class WaypointManager {
     }
 
     public static int infoWaypoint() {
-        CommandHelper.sendMessage(isActive() ?
+        CommandHelper.sendMessage(active() ?
                 String.format("Waypoint currently set to %.2f, %.2f, %.2f.", target.x, target.y, target.z) :
-                "No waypoint saved");
+                "No waypoint currently active"
+        );
         return 1;
     }
 
 
-    public static boolean isActive() {
+    public static boolean active() {
         return active && target != null;
     }
 
     public static void spawnPathParticles(int maxBlocks) {
-        if (!isActive()) return;
+        if (!active()) return;
 
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.player == null || mc.world == null) return;
@@ -101,7 +99,7 @@ public class WaypointManager {
         }
     }
 
-    public static void setLastDeath(Vec3d deathPos) {
+    public static void setLastDeath(@Nullable Vec3d deathPos) {
         if (deathPos == null) return;
 
         try {
@@ -136,8 +134,8 @@ public class WaypointManager {
         }
     }
 
-    public static int saveWaypoint(CommandContext<FabricClientCommandSource> ctx) {
-        if (!isActive()) {
+    public static int saveWaypoint(@NotNull CommandContext<FabricClientCommandSource> ctx) {
+        if (!active()) {
             CommandHelper.sendError("No waypoint active");
             return 0;
         }
@@ -169,7 +167,7 @@ public class WaypointManager {
         }
     }
 
-    public static int deleteWaypoint(CommandContext<FabricClientCommandSource> ctx) {
+    public static int deleteWaypoint(@NotNull CommandContext<FabricClientCommandSource> ctx) {
         String input = ctx.getInput();
         String after = input.trim().substring("waypoint delete".length()).trim();
         if (after.isEmpty()) {
@@ -194,7 +192,7 @@ public class WaypointManager {
         }
     }
 
-    public static int loadWaypoint(CommandContext<FabricClientCommandSource> ctx) {
+    public static int loadWaypoint(@NotNull CommandContext<FabricClientCommandSource> ctx) {
         String input = ctx.getInput();
         String after = input.trim().substring("waypoint load".length()).trim();
         if (after.isEmpty()) {
@@ -294,7 +292,7 @@ public class WaypointManager {
         }
     }
 
-    private static String getSimpleWorldName() {
+    private static @NotNull String getSimpleWorldName() {
         ClientWorld world = MinecraftClient.getInstance().world;
         if (world == null) return "overworld";
         String key = world.getRegistryKey().getValue().toString().toLowerCase();
@@ -340,7 +338,7 @@ public class WaypointManager {
         return 1;
     }
 
-    public static int setWaypointFromArgs(CommandContext<FabricClientCommandSource> ctx) {
+    public static int setWaypointFromArgs(@NotNull CommandContext<FabricClientCommandSource> ctx) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) {
             return 0;
@@ -357,9 +355,9 @@ public class WaypointManager {
         Vec3d base = new Vec3d(player.getX(), player.getY(), player.getZ());
         Vec3d eye = player.getCameraPosVec(1.0F);
 
-        double x = parseCoordinate(parts[0], base.x, eye.x);
-        double y = parseCoordinate(parts[1], base.y, eye.y);
-        double z = parseCoordinate(parts[2], base.z, eye.z);
+        double x = parseCoordinate(parts[0], base.x);
+        double y = parseCoordinate(parts[1], base.y);
+        double z = parseCoordinate(parts[2], base.z);
 
         x = centerOfBlock(x);
         y = centerOfBlock(y);
@@ -376,7 +374,7 @@ public class WaypointManager {
         return Math.floor(coord) + 0.5;
     }
 
-    public static double parseCoordinate(String token, double relativeFeet, double relativeEye) {
+    public static double parseCoordinate(@NotNull String token, double relativeFeet) {
         token = token.trim();
         if (token.startsWith("~")) {
             if (token.length() == 1) {
@@ -399,7 +397,7 @@ public class WaypointManager {
         }
     }
 
-    public static CompletableFuture<Suggestions> suggestWaypointNames(CommandContext<FabricClientCommandSource> ctx, SuggestionsBuilder builder) {
+    public static @NotNull CompletableFuture<Suggestions> suggestWaypointNames(@NotNull CommandContext<FabricClientCommandSource> ctx, @NotNull SuggestionsBuilder builder) {
         String remaining = builder.getRemaining().toLowerCase();
         for (String name : getWaypointNames()) {
             if (name.startsWith(remaining)) builder.suggest(name);
@@ -407,7 +405,7 @@ public class WaypointManager {
         return builder.buildFuture();
     }
 
-    public static Set<String> getWaypointNames() {
+    public static @NotNull Set<String> getWaypointNames() {
         return readWaypoints().keySet();
     }
 }
