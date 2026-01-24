@@ -9,6 +9,7 @@ import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 
 import java.net.URI;
@@ -48,13 +49,16 @@ public class VoteCommand {
                         // Send clickable messages
                         for (int i = 0; i < voteUris.size(); i++) {
                             URI uri = voteUris.get(i);
+                            String host = uri.getHost();
+                            String siteName = host != null ? host.split("\\.")[0] : "website";
 
-                            Text message = Text.literal("Click here to vote (" + (i + 1) + ").")
+                            Text message = Text.literal("Click here to vote for " + siteName)
                                     .setStyle(Style.EMPTY
                                             .withClickEvent(new ClickEvent.OpenUrl(uri))
                                             .withHoverEvent(new HoverEvent.ShowText(
-                                                    Text.literal("Opens vote link " + (i + 1))
+                                                    Text.literal("Opens vote link of " + siteName)
                                             ))
+                                            .withColor(Formatting.GRAY)
                                     );
 
                             CommandHelper.sendMessage(message);

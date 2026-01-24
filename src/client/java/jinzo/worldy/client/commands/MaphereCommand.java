@@ -9,23 +9,26 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.Vec3d;
 
 import java.net.URI;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
-public final class IcemapCommand {
+public class MaphereCommand {
     public static LiteralArgumentBuilder<FabricClientCommandSource> register() {
-        return literal("icemap")
+        return literal("maphere")
                 .executes(ctx -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     if (client.player == null) return 0;
 
+                    Vec3d position = client.player.getEntityPos();
+
                     // Create a clickable message using static factory methods
-                    Text message = Text.literal("Click here to open the ice highway map.")
+                    Text message = Text.literal("Click here to open the map on your position.")
                             .setStyle(Style.EMPTY
-                                    .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://nokteholda.github.io/WorldMC-Ice-Highways-Map/")))
-                                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("Opens the ice highway map in your browser")))
+                                    .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://map.worldmc.org/?worldname=world&mapname=flat&zoom=0&x="+(int)position.x+"&y=64&z="+(int)position.z)))
+                                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open Dynmap on your position")))
                                     .withColor(Formatting.GRAY)
                             );
 

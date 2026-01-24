@@ -39,7 +39,7 @@ public class WorldyClient implements ClientModInitializer {
                     HomeCommand.registerAlias(),
                     IcemapCommand.register(),
                     VpCommand.register(),
-                    MapCommand.register(),
+                    MaphereCommand.register(),
                     VoteCommand.register()
             );
             WaypointCommand.register();
