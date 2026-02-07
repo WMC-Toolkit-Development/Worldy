@@ -43,7 +43,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}",
+    "minecraft": ">=1.21.10 <1.21.12",
     "modmenu": "*",
     "cloth-config": "*"
   }
