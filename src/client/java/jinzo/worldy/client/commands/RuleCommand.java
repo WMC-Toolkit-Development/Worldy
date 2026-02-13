@@ -41,16 +41,22 @@ public class RuleCommand {
 
                     return 1;
                 })
-                .then(argument("id", StringArgumentType.string())
+                .then(argument("number", StringArgumentType.string())
                         .suggests((context, builder) -> {
+                            String typed = context.getInput();
+                            int lastSpace = typed.lastIndexOf(' ');
+                            if (lastSpace != -1) typed = typed.substring(lastSpace + 1);
+
                             var rules = RuleHelper.getAllRules();
                             for (var rule : rules) {
-                                builder.suggest(rule.id);
+                                if (rule.id.startsWith(typed)) {
+                                    builder.suggest(rule.id);
+                                }
                             }
                             return builder.buildFuture();
                         })
                         .executes(ctx -> {
-                            String id = StringArgumentType.getString(ctx, "id");
+                            String id = StringArgumentType.getString(ctx, "number");
                             RuleHelper.loadRulesAsync();
 
                             RuleHelper.findRuleById(id).ifPresentOrElse(rule -> {

@@ -38,6 +38,7 @@ public class WorldyClient implements ClientModInitializer {
                     LocalCommand.registerAlias(),
                     HomeCommand.register(),
                     HomeCommand.registerAlias(),
+                    SpawnCommand.register(),
                     IcemapCommand.register(),
                     VpCommand.register(),
                     MaphereCommand.register(),
