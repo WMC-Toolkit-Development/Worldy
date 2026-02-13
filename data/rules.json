@@ -1,0 +1,90 @@
+{
+  "url": "https://worldmc.org/docs/social/rules/",
+  "rules": [
+    {
+      "id": "1.1",
+      "title": "Toxic Behavior",
+      "description": "This includes but is not limited to: spamming, explicit sexual or NSFW content and discussions, excessive harassment of a player frequently and consistently, using racial slurs, severe bullying, excessive insults, or particularly harsh insults pertaining to real life (e.g. telling a player the world is better off without them). If a player is found to have engaged in severely toxic behavior before joining WorldMC, staff may pre-emptively punish them. Keep behavior within the boundaries of the server."
+    },
+    {
+      "id": "1.2",
+      "title": "Advertising",
+      "description": "Do not advertise anything not related to WorldMC when using WorldMC services."
+    },
+    {
+      "id": "1.3",
+      "title": "Sharing Personal Information",
+      "description": "Do not reveal any personal information about yourself or another player. If you are unsure whether something falls under this rule, play it safe and do not do it."
+    },
+    {
+      "id": "1.4",
+      "title": "Real-World Trading",
+      "description": "No real-world trading, selling, or purchasing in-game items for real money. Example: selling gold for real-life money or vice versa."
+    },
+    {
+      "id": "1.5",
+      "title": "Impersonating Staff or Players",
+      "description": "Pretending to be another player or staff member to gain a gameplay advantage or to deceive others beyond a quick and harmless joke is not allowed."
+    },
+    {
+      "id": "1.6",
+      "title": "Behavior Outside Official Services",
+      "description": "If behavior outside official WorldMC services is severe enough, it may still lead to consequences. This includes, but is not limited to, doxxing someone outside of WorldMC services or discussing how to crash the server in external chats."
+    },
+    {
+      "id": "2.1",
+      "title": "Disrupting Server Stability",
+      "description": "This includes but is not limited to lag machines, duplication glitches, and exploits that give an unfair advantage."
+    },
+    {
+      "id": "2.2",
+      "title": "Alternate Accounts",
+      "description": "Do not play on WorldMC using more than one Minecraft account. If you need to switch accounts, create a ticket and communicate with staff."
+    },
+    {
+      "id": "2.3",
+      "title": "Knowingly Benefiting from Rule Breaking",
+      "description": "Withholding information about serious rule-breaking may result in punishment. Examples include knowingly taking duped items, failing to report x-ray usage, or collaborating with an alternate account."
+    },
+    {
+      "id": "2.4",
+      "title": "Modified Clients",
+      "description": "Some modifications such as Fullbright, Optifine, and Litematica are allowed. X-ray resource packs are banned. Use common sense and ask staff if you are unsure."
+    },
+    {
+      "id": "3.1",
+      "title": "Nation Naming",
+      "description": "Nation names must be based on a real current or past nation. The capital must be within the historical borders of that nation. Fictional nations such as Atlantis are not allowed. Nations such as Nazi Germany are also not allowed."
+    },
+    {
+      "id": "3.2",
+      "title": "Town Naming",
+      "description": "Fictional town names are allowed. Nonfictional town names must be geographically appropriate. Popular names may not use loopholes (e.g. Berlin, Ohio-style naming)."
+    },
+    {
+      "id": "3.3",
+      "title": "Griefing",
+      "description": "Griefing is the deliberate destruction of a player’s creations without consent. Destroying transportation infrastructure connecting consenting areas will be punished especially harshly."
+    },
+    {
+      "id": "3.4",
+      "title": "Looting",
+      "description": "Looting is allowed in town claims or wilderness as long as you do not grief. Only valuable blocks may be taken. Non-valuable blocks such as wood or glass do not count as looting."
+    },
+    {
+      "id": "3.5",
+      "title": "Claimblocking",
+      "description": "Do not claim land solely to block others from expansion. Claims must be made with genuine intent to expand."
+    },
+    {
+      "id": "3.6",
+      "title": "Terraforming",
+      "description": "Significant changes to the natural shape of land or oceans are not allowed, especially if they impact Dynmap visuals. Minor natural-looking changes may be permitted."
+    },
+    {
+      "id": "3.7",
+      "title": "Game Breaking Traps",
+      "description": "Traps that permanently trap a player or prevent them from playing are not allowed. Traps that allow escape or result in death upon login may be allowed."
+    }
+  ]
+}
