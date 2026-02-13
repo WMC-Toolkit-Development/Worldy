@@ -1,7 +1,7 @@
 package jinzo.worldy.client.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import jinzo.worldy.client.Models.Staff;
+import jinzo.worldy.client.models.Staff;
 import jinzo.worldy.client.utils.CommandHelper;
 import jinzo.worldy.client.utils.StafflistHelper;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;

@@ -2,7 +2,7 @@ package jinzo.worldy.client.commands;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import jinzo.worldy.client.Models.DeathTracker;
+import jinzo.worldy.client.models.DeathTracker;
 import jinzo.worldy.client.utils.CommandHelper;
 import jinzo.worldy.client.utils.WaypointManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;

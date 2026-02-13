@@ -14,6 +14,12 @@
   "text.autoconfig.worldy.option.waypoint.pathLength": "Path length",
   "text.autoconfig.worldy.option.waypoint.pathLength.@Tooltip": "Maximum number of waypoint trail segments.",
 
-  "text.autoconfig.worldy.option.staffList": "Stafflist settings",
-  "text.autoconfig.worldy.option.staffList.fetchOnLogin": "Load data of staff on join"
+  "text.autoconfig.worldy.option.fetch": "Data fetch settings",
+  "text.autoconfig.worldy.option.fetch.fetchUrlsOnLogin": "Load data of staff and rules on join",
+  "text.autoconfig.worldy.option.fetch.stafflistDataUrl": "URL of staff data",
+  "text.autoconfig.worldy.option.fetch.rulesDataUrl": "URL of rules data",
+
+  "command.worldy.rules.open": "Click here to open the rules",
+  "command.worldy.rules.hover": "Open rules",
+  "command.worldy.data.loading": "Data not loaded yet. Fetching now ..."
 }

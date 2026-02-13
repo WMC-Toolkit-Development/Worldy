@@ -1,4 +1,4 @@
-package jinzo.worldy.client.Models;
+package jinzo.worldy.client.models;
 
 public final class StaffState {
     private static volatile boolean isStaff = false;

@@ -3,7 +3,8 @@ package jinzo.worldy.client.utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import jinzo.worldy.client.Models.Staff;
+import jinzo.worldy.client.models.Staff;
+import jinzo.worldy.client.WorldyClient;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,8 +18,6 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public final class StafflistHelper {
-
-    private static final String STAFF_JSON_URL = "https://raw.githubusercontent.com/pernio/Worldy/refs/heads/main/data/staff.json";
 
     private static final Map<UUID, String> uuidToNameCache = new ConcurrentHashMap<>();
     private static final Map<String, UUID> playerUuidMap = new ConcurrentHashMap<>();
@@ -55,7 +54,7 @@ public final class StafflistHelper {
         executor.submit(() -> {
             HttpURLConnection conn = null;
             try {
-                URL url = new URL(STAFF_JSON_URL);
+                URL url = new URL(WorldyClient.getConfig().fetch.stafflistDataUrl);
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setReadTimeout(5000);

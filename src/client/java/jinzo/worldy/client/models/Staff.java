@@ -1,4 +1,4 @@
-package jinzo.worldy.client.Models;
+package jinzo.worldy.client.models;
 
 import org.jetbrains.annotations.NotNull;
 

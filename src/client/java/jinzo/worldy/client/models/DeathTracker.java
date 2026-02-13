@@ -1,4 +1,4 @@
-package jinzo.worldy.client.Models;
+package jinzo.worldy.client.models;
 
 import jinzo.worldy.client.utils.WaypointManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

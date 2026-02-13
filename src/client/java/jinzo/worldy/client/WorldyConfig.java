@@ -12,7 +12,7 @@ public class WorldyConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     public WaypointSettings waypoint = new WaypointSettings();
     @ConfigEntry.Gui.CollapsibleObject
-    public StaffListSettings staffList = new StaffListSettings();
+    public FetchSettings fetch = new FetchSettings();
 
     public static class GeneralSettings {
         @ConfigEntry.Gui.Tooltip
@@ -30,8 +30,10 @@ public class WorldyConfig implements ConfigData {
         public int pathLength = 10;
     }
 
-    public static class StaffListSettings {
-        public boolean fetchOnLogin = true;
+    public static class FetchSettings {
+        public boolean fetchUrlsOnLogin = true;
+        public String stafflistDataUrl = "https://raw.githubusercontent.com/pernio/Worldy/refs/heads/main/data/staff.json";
+        public String rulesDataUrl = "https://raw.githubusercontent.com/pernio/Worldy/refs/heads/main/data/rules.json";
     }
 
     @Override

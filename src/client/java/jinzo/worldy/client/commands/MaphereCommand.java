@@ -24,7 +24,6 @@ public class MaphereCommand {
 
                     Vec3d position = client.player.getEntityPos();
 
-                    // Create a clickable message using static factory methods
                     Text message = Text.literal("Click here to open the map on your position.")
                             .setStyle(Style.EMPTY
                                     .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://map.worldmc.org/?worldname=world&mapname=flat&zoom=0&x="+(int)position.x+"&y=64&z="+(int)position.z)))
@@ -32,7 +31,6 @@ public class MaphereCommand {
                                     .withColor(Formatting.GRAY)
                             );
 
-                    // Send the message to the player
                     CommandHelper.sendMessage(message);
 
                     return 1;

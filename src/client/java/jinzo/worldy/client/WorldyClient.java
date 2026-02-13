@@ -3,6 +3,7 @@ package jinzo.worldy.client;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import jinzo.worldy.client.commands.*;
+import jinzo.worldy.client.utils.RulesHelper;
 import jinzo.worldy.client.utils.StafflistHelper;
 import jinzo.worldy.client.utils.WaypointManager;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -56,8 +57,9 @@ public class WorldyClient implements ClientModInitializer {
                     isTargetServer = false;
                 }
 
-                if (isTargetServer && getConfig().staffList.fetchOnLogin) {
+                if (isTargetServer && getConfig().fetch.fetchUrlsOnLogin) {
                     StafflistHelper.loadStaffListOnJoin(client);
+                    RulesHelper.loadRulesAsync();
                 }
             } catch (Exception e) {
                 System.err.println("Error while handling JOIN event: " + e.getMessage());
