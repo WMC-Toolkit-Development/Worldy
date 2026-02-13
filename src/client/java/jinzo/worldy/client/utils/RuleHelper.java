@@ -2,7 +2,7 @@ package jinzo.worldy.client.utils;
 
 import com.google.gson.Gson;
 import jinzo.worldy.client.models.Rule;
-import jinzo.worldy.client.models.RulesData;
+import jinzo.worldy.client.models.RuleData;
 import jinzo.worldy.client.WorldyClient;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 
-public final class RulesHelper {
+public final class RuleHelper {
 
     private static final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r, "worldy-rulesloader");
@@ -21,13 +21,13 @@ public final class RulesHelper {
         return t;
     });
 
-    private static volatile RulesData cachedRules;
+    private static volatile RuleData cachedRules;
     private static volatile Instant lastFetched = Instant.EPOCH;
     private static volatile boolean isLoading = false;
 
-    private RulesHelper() {}
+    private RuleHelper() {}
 
-    public static @NotNull Optional<RulesData> getCachedRules() {
+    public static @NotNull Optional<RuleData> getCachedRules() {
         return Optional.ofNullable(cachedRules);
     }
 
@@ -49,7 +49,7 @@ public final class RulesHelper {
                      Scanner scanner = new Scanner(in).useDelimiter("\\A")) {
 
                     String json = scanner.hasNext() ? scanner.next() : "";
-                    RulesData data = new Gson().fromJson(json, RulesData.class);
+                    RuleData data = new Gson().fromJson(json, RuleData.class);
 
                     if (data != null && data.rules != null) {
                         cachedRules = data;

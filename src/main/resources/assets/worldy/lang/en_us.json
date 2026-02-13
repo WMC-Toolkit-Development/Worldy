@@ -19,7 +19,8 @@
   "text.autoconfig.worldy.option.fetch.stafflistDataUrl": "URL of staff data",
   "text.autoconfig.worldy.option.fetch.rulesDataUrl": "URL of rules data",
 
-  "command.worldy.rules.open": "Click here to open the rules",
-  "command.worldy.rules.hover": "Open rules",
-  "command.worldy.data.loading": "Data not loaded yet. Fetching now ..."
+  "command.worldy.rule.title": "All rules",
+  "command.worldy.rule.loading": "Loading in rules...",
+  "command.worldy.rule.not_found": "Given rule was not found",
+  "command.worldy.data.loading": "Data not loaded yet. Fetching now..."
 }
