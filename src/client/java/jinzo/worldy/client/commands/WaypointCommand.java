@@ -6,6 +6,8 @@ import jinzo.worldy.client.models.DeathTracker;
 import jinzo.worldy.client.utils.CommandHelper;
 import jinzo.worldy.client.utils.WaypointManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -20,7 +22,7 @@ public class WaypointCommand {
             dispatcher.register(
                     literal("waypoint")
                             .executes((ctx) -> {
-                                CommandHelper.sendError("Not enough arguments");
+                                CommandHelper.sendError("command.worldy.waypoint.not_enough_arguments");
                                 return 0;
                             })
                             .then(literal("clear").executes(ctx -> WaypointManager.clearWaypoint()))
@@ -33,7 +35,7 @@ public class WaypointCommand {
                             )
                             .then(literal("load")
                                     .executes((ctx) -> {
-                                        CommandHelper.sendError("Usage: /waypoint load <name>");
+                                        CommandHelper.sendError("command.worldy.waypoint.usage_load");
                                         return 0;
                                     })
                                     .then(argument("name", StringArgumentType.greedyString())
@@ -42,7 +44,7 @@ public class WaypointCommand {
                             )
                             .then(literal("delete")
                                     .executes((ctx) -> {
-                                        CommandHelper.sendError("Usage: /waypoint delete <name>");
+                                        CommandHelper.sendError("command.worldy.waypoint.usage_delete");
                                         return 0;
                                     })
                                     .then(argument("name", StringArgumentType.greedyString())
@@ -52,17 +54,17 @@ public class WaypointCommand {
                             )
                             .then(literal("set")
                                     .executes((ctx) -> {
-                                        CommandHelper.sendError("Usage: /waypoint set <x> <y> <z>");
+                                        CommandHelper.sendError("command.worldy.waypoint.usage_set");
                                         return 0;
                                     })
                                     .then(argument("x", DoubleArgumentType.doubleArg())
                                             .executes((ctx) -> {
-                                                CommandHelper.sendError("Usage: /waypoint set <x> <y> <z>");
+                                                CommandHelper.sendError("command.worldy.waypoint.usage_set");
                                                 return 0;
                                             })
                                             .then(argument("y", DoubleArgumentType.doubleArg())
                                                     .executes((ctx) -> {
-                                                        CommandHelper.sendError("Usage: /waypoint set <x> <y> <z>");
+                                                        CommandHelper.sendError("command.worldy.waypoint.usage_set");
                                                         return 0;
                                                     })
                                                     .then(argument("z", DoubleArgumentType.doubleArg())

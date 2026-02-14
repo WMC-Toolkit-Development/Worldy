@@ -44,19 +44,18 @@ public class VoteCommand {
                             }
                         });
 
-                        CommandHelper.sendMessage("Votelinks opened in browser.");
+                        CommandHelper.sendMessage("command.worldy.vote.title");
                     } else {
                         // Send clickable messages
-                        for (int i = 0; i < voteUris.size(); i++) {
-                            URI uri = voteUris.get(i);
+                        for (URI uri : voteUris) {
                             String host = uri.getHost();
                             String siteName = host != null ? host.split("\\.")[0] : "website";
 
-                            Text message = Text.literal("Click here to vote for " + siteName)
+                            Text message = Text.translatable("command.worldy.vote.click", siteName)
                                     .setStyle(Style.EMPTY
                                             .withClickEvent(new ClickEvent.OpenUrl(uri))
                                             .withHoverEvent(new HoverEvent.ShowText(
-                                                    Text.literal("Opens vote link of " + siteName)
+                                                    Text.translatable("command.worldy.vote.hover", siteName)
                                             ))
                                             .withColor(Formatting.GRAY)
                                     );

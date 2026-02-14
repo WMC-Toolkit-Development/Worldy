@@ -9,25 +9,25 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandHelper {
 
-    public static void sendError(@NotNull String message) {
+    public static void sendError(@NotNull String key) {
         sendMessage(
-                Text.literal(message)
+                Text.translatable(key)
                         .setStyle(Style.EMPTY.withColor(Formatting.RED))
         );
     }
 
-    public static void sendWarning(@NotNull String message) {
+    public static void sendWarning(@NotNull String key) {
         sendMessage(
-                Text.literal(message)
+                Text.translatable(key)
                         .setStyle(Style.EMPTY.withColor(Formatting.YELLOW))
         );
     }
 
-    public static void sendMessage(@NotNull String message) {
-        sendMessage(Text.literal(message).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+    public static void sendMessage(@NotNull String key) {
+        sendMessage(Text.translatable(key).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
     }
 
-    public static void sendMessage(@NotNull Text message) {
+    public static void sendMessage(@NotNull Text text) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return;
 
@@ -40,7 +40,7 @@ public class CommandHelper {
                 Text.empty()
                         .append(prefix)
                         .append(separator)
-                        .append(message),
+                        .append(text),
                 false
         );
     }

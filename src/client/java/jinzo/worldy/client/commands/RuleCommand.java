@@ -25,10 +25,7 @@ public class RuleCommand {
 
                     var rules = RuleHelper.getAllRules();
                     if (rules.isEmpty()) {
-                        CommandHelper.sendMessage(
-                                Text.translatable("command.worldy.rule.loading")
-                                        .formatted(Formatting.GRAY)
-                        );
+                        CommandHelper.sendMessage("command.worldy.data.loading");
                         return 1;
                     }
 
@@ -69,10 +66,7 @@ public class RuleCommand {
                                                 .formatted(Formatting.GRAY)
                                 );
                             }, () -> {
-                                CommandHelper.sendMessage(
-                                        Text.translatable("command.worldy.rule.not_found")
-                                                .formatted(Formatting.RED)
-                                );
+                                CommandHelper.sendError("command.worldy.rule.not_found");
                             });
 
                             return 1;

@@ -24,10 +24,10 @@ public class MaphereCommand {
 
                     Vec3d position = client.player.getEntityPos();
 
-                    Text message = Text.literal("Click here to open the map on your position.")
+                    Text message = Text.translatable("command.worldy.maphere.title")
                             .setStyle(Style.EMPTY
                                     .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://map.worldmc.org/?worldname=world&mapname=flat&zoom=0&x="+(int)position.x+"&y=64&z="+(int)position.z)))
-                                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open Dynmap on your position")))
+                                    .withHoverEvent(new HoverEvent.ShowText(Text.translatable("command.worldy.maphere.title")))
                                     .withColor(Formatting.GRAY)
                             );
 

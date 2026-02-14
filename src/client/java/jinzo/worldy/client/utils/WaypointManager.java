@@ -13,6 +13,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,15 +50,12 @@ public class WaypointManager {
         target = null;
         active = false;
         tickCounter = 0;
-        CommandHelper.sendMessage("Waypoint cleared");
+        CommandHelper.sendMessage("command.worldy.waypoint.cleared");
         return 1;
     }
 
     public static int infoWaypoint() {
-        CommandHelper.sendMessage(active() ?
-                String.format("Waypoint currently set to %.2f, %.2f, %.2f.", target.x, target.y, target.z) :
-                "No waypoint currently active"
-        );
+        CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.info_" + (active() ? "set" : "empty"), Math.floor(target.x), Math.floor(target.y), Math.floor(target.z)).formatted(Formatting.GRAY));
         return 1;
     }
 
@@ -136,13 +135,13 @@ public class WaypointManager {
 
     public static int saveWaypoint(@NotNull CommandContext<FabricClientCommandSource> ctx) {
         if (!active()) {
-            CommandHelper.sendError("No waypoint active");
+            CommandHelper.sendError("command.worldy.waypoint.no_active");
             return 0;
         }
         String input = ctx.getInput();
         String after = input.trim().substring("waypoint save".length()).trim();
         if (after.isEmpty()) {
-            CommandHelper.sendError("Usage: /waypoint save <name>");
+            CommandHelper.sendError("command.worldy.waypoint.usage_save");
             return 0;
         }
         String name = after.toLowerCase(); // allow spaces in name
@@ -152,17 +151,17 @@ public class WaypointManager {
             Map<String, WaypointEntry> waypoints = readWaypoints();
 
             if (waypoints.containsKey(name)) {
-                CommandHelper.sendError("A waypoint with that name already exists.");
+                CommandHelper.sendError("command.worldy.waypoint.duplicate_name");
                 return 0;
             }
 
             WaypointEntry entry = new WaypointEntry(target.x, target.y, target.z, worldStr);
             waypoints.put(name, entry);
             writeWaypoints(waypoints);
-            CommandHelper.sendMessage(String.format("Saved waypoint '%s' at %.2f, %.2f, %.2f (%s).", name, target.x, target.y, target.z, worldStr));
+            CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.saved", name, Math.floor(target.x), Math.floor(target.y), Math.floor(target.z), worldStr).formatted(Formatting.GRAY));
             return 1;
         } catch (Throwable t) {
-            CommandHelper.sendError("Failed to save waypoint: " + t.getMessage());
+            CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.save_failed", t.getMessage()).formatted(Formatting.RED));
             return 0;
         }
     }
@@ -171,7 +170,7 @@ public class WaypointManager {
         String input = ctx.getInput();
         String after = input.trim().substring("waypoint delete".length()).trim();
         if (after.isEmpty()) {
-            CommandHelper.sendError("Usage: /waypoint delete <name>");
+            CommandHelper.sendError("command.worldy.waypoint.usage_delete");
             return 0;
         }
         String name = after.toLowerCase();
@@ -179,15 +178,15 @@ public class WaypointManager {
         try {
             Map<String, WaypointEntry> waypoints = readWaypoints();
             if (!waypoints.containsKey(name)) {
-                CommandHelper.sendError("No waypoint with that name exists.");
+                CommandHelper.sendError("command.worldy.waypoint.name_not_found");
                 return 0;
             }
             waypoints.remove(name);
             writeWaypoints(waypoints);
-            CommandHelper.sendMessage(String.format("Deleted waypoint '%s'.", name));
+            CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.deleted", name).formatted(Formatting.GRAY));
             return 1;
         } catch (Throwable t) {
-            CommandHelper.sendError("Failed to delete waypoint: " + t.getMessage());
+            CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.delete_failed", t.getMessage()).formatted(Formatting.RED));
             return 0;
         }
     }
@@ -196,7 +195,7 @@ public class WaypointManager {
         String input = ctx.getInput();
         String after = input.trim().substring("waypoint load".length()).trim();
         if (after.isEmpty()) {
-            CommandHelper.sendError("Usage: /waypoint load <name>");
+            CommandHelper.sendError("command.worldy.waypoint.usage_load");
             return 0;
         }
 
@@ -206,7 +205,7 @@ public class WaypointManager {
             Map<String, WaypointEntry> waypoints = readWaypoints();
             WaypointEntry entry = waypoints.get(name);
             if (entry == null) {
-                CommandHelper.sendError("No waypoint with that name exists.");
+                CommandHelper.sendError("command.worldy.waypoint.name_not_found");
                 return 0;
             }
 
@@ -215,10 +214,10 @@ public class WaypointManager {
             double z = centerOfBlock(entry.z());
             Vec3d pos = new Vec3d(x, y, z);
             setWaypoint(pos);
-            CommandHelper.sendMessage(String.format("Loaded waypoint '%s' at %.2f, %.2f, %.2f (%s).", name, x, y, z, entry.world()));
+            CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.loaded", name, Math.floor(x), Math.floor(y), Math.floor(z), entry.world()).formatted(Formatting.GRAY));
             return 1;
         } catch (Throwable t) {
-            CommandHelper.sendError("Failed to load waypoint: " + t.getMessage());
+            CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.load_failed", t.getMessage()).formatted(Formatting.RED));
             return 0;
         }
     }
@@ -315,7 +314,7 @@ public class WaypointManager {
         Vec3d target = new Vec3d(x, y, z);
         WaypointManager.setWaypoint(target);
 
-        CommandHelper.sendMessage(String.format("Waypoint set to your position (%.2f, %.2f, %.2f).", x, y, z));
+        CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.set_here", Math.floor(x), Math.floor(y), Math.floor(z)).formatted(Formatting.GRAY));
         return 1;
     }
 
@@ -323,7 +322,7 @@ public class WaypointManager {
         WaypointEntry lastDeath = WaypointManager.readLastDeath();
 
         if (lastDeath == null) {
-            CommandHelper.sendError("No last death found.");
+            CommandHelper.sendError("command.worldy.waypoint.no_last_death");
             return 0;
         }
 
@@ -334,7 +333,7 @@ public class WaypointManager {
         Vec3d target = new Vec3d(x, y, z);
         WaypointManager.setWaypoint(target);
 
-        CommandHelper.sendMessage(String.format("Waypoint set to last death (%.2f, %.2f, %.2f).", x, y, z));
+        CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.set_last_death", Math.floor(x), Math.floor(y), Math.floor(z)).formatted(Formatting.GRAY));
         return 1;
     }
 
@@ -348,7 +347,7 @@ public class WaypointManager {
         String after = input.trim().substring("waypoint set".length()).trim();
         String[] parts = after.split("\\s+");
         if (parts.length < 3) {
-            CommandHelper.sendError("Usage: /waypoint set <x|~> <y|~> <z|~>");
+            CommandHelper.sendError("command.worldy.waypoint.usage_set");
             return 0;
         }
 
@@ -366,7 +365,7 @@ public class WaypointManager {
         Vec3d target = new Vec3d(x, y, z);
         WaypointManager.setWaypoint(target);
 
-        CommandHelper.sendMessage(String.format("Waypoint set (%.2f, %.2f, %.2f).", x, y, z));
+        CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.set", Math.floor(x), Math.floor(y), Math.floor(z)).formatted(Formatting.GRAY));
         return 1;
     }
 

@@ -22,10 +22,10 @@ public final class IcemapCommand {
                     if (client.player == null) return 0;
 
                     // Create a clickable message using static factory methods
-                    Text message = Text.literal("Click here to open the ice highway map.")
+                    Text message = Text.translatable("command.worldy.icemap.title")
                             .setStyle(Style.EMPTY
                                     .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://nokteholda.github.io/WorldMC-Ice-Highways-Map/")))
-                                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("Opens the ice highway map in your browser")))
+                                    .withHoverEvent(new HoverEvent.ShowText(Text.translatable("command.worldy.icemap.hover")))
                                     .withColor(Formatting.GRAY)
                             );
 

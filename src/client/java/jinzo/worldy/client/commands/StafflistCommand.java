@@ -27,7 +27,7 @@ public final class StafflistCommand {
 
                     Map<String, List<Staff>> data = StafflistHelper.getCachedStaffData();
                     if (data.isEmpty()) {
-                        CommandHelper.sendWarning("Staff list not loaded yet. Fetching now...");
+                        CommandHelper.sendMessage("command.worldy.data.loading");
                         StafflistHelper.loadStaffListOnJoin(client);
                         return 1;
                     }
@@ -40,15 +40,14 @@ public final class StafflistCommand {
     private static void sendStaffList(MinecraftClient client, Map<String, List<Staff>> staffData) {
         if (staffData.isEmpty()) {
             if (client.player != null)
-                CommandHelper.sendError("No staff data found.");
+                CommandHelper.sendError("command.worldy.stafflist.no_data");
             return;
         }
 
         if (client.player != null)
-            client.player.sendMessage(Text.literal("§6=== Staff List ===").formatted(Formatting.GOLD), false);
+            CommandHelper.sendMessage(Text.translatable("command.worldy.stafflist.title").formatted(Formatting.GOLD, Formatting.BOLD));
 
         boolean hasUnknownPlayers = false;
-        boolean hasOfflinePlayers = false;
 
         for (Map.Entry<String, List<Staff>> entry : staffData.entrySet()) {
             String role = entry.getKey();
@@ -61,7 +60,6 @@ public final class StafflistCommand {
             if (client.player != null) client.player.sendMessage(roleMessage, false);
 
             if (staffMembers.stream().anyMatch(Staff::isUnknown)) hasUnknownPlayers = true;
-            if (staffMembers.stream().anyMatch(m -> !isPlayerOnline(m.getDisplayName(), client))) hasOfflinePlayers = true;
         }
 
         int totalStaff = staffData.values().stream().mapToInt(List::size).sum();
@@ -71,15 +69,18 @@ public final class StafflistCommand {
                 .count();
 
         if (client.player != null) {
-            client.player.sendMessage(
-                    Text.literal("§7Total staff members: §b" + totalStaff + " §7(§a" + onlineCount + " online§7)").formatted(Formatting.GRAY),
-                    false
+            CommandHelper.sendMessage(
+                    Text.translatable("command.worldy.stafflist.total_staff").formatted(Formatting.GRAY)
+                            .append(Text.literal(String.valueOf(totalStaff)).formatted(Formatting.AQUA))
+                            .append(Text.literal(" (").formatted(Formatting.GRAY))
+                            .append(Text.translatable("command.worldy.stafflist.online_staff", onlineCount).formatted(Formatting.GREEN))
+                            .append(Text.literal(")").formatted(Formatting.GRAY))
             );
         }
 
         if (hasUnknownPlayers) {
             if (client.player != null)
-                client.player.sendMessage(Text.literal("§cNote: Could not resolve some usernames").formatted(Formatting.RED), false);
+                CommandHelper.sendError("command.worldy.stafflist.usernames_not_found");
         }
     }
 
@@ -113,11 +114,12 @@ public final class StafflistCommand {
             color = isOnline ? Formatting.GREEN : Formatting.GRAY;
         }
 
-        MutableText hoverText = Text.literal("UUID: " + member.getUuid().toString()).formatted(Formatting.GRAY);
-        hoverText.append(Text.literal("\nStatus: " + (isOnline ? "Online" : "Offline")).formatted(isOnline ? Formatting.GREEN : Formatting.YELLOW));
+        MutableText hoverText = Text.translatable("command.worldy.stafflist.uuid", member.getUuid()).formatted(Formatting.GRAY).append("\n");
+        hoverText.append(Text.translatable("command.worldy.stafflist.uuid").formatted(isOnline ? Formatting.GREEN : Formatting.YELLOW))
+                .append(Text.translatable("command.worldy.stafflist.online." + (isOnline ? "online" : "offline")).formatted(isOnline ? Formatting.GREEN : Formatting.YELLOW));
 
         if (member.isUnknown()) {
-            hoverText.append(Text.literal("\nNote: Username could not be resolved").formatted(Formatting.RED));
+            hoverText.append(Text.translatable("command.worldy.stafflist.username_not_found").formatted(Formatting.RED));
         }
 
         String playerName = member.getDisplayName();
