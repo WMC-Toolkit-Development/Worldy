@@ -18,6 +18,6 @@ public class SpawnNationCommand {
     }
 
     public static LiteralArgumentBuilder<FabricClientCommandSource> register() {
-        return literal("sn").executes(SpawnNationCommand::execute);
+        return literal("ns").executes(SpawnNationCommand::execute);
     }
 }

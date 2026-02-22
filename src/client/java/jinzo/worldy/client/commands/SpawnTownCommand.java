@@ -22,6 +22,6 @@ public class SpawnTownCommand {
     }
 
     public static LiteralArgumentBuilder<FabricClientCommandSource> registerAlias() {
-        return literal("st").executes(SpawnTownCommand::execute);
+        return literal("ts").executes(SpawnTownCommand::execute);
     }
 }

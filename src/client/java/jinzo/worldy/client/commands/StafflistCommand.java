@@ -115,8 +115,8 @@ public final class StafflistCommand {
         }
 
         MutableText hoverText = Text.translatable("command.worldy.stafflist.uuid", member.getUuid()).formatted(Formatting.GRAY).append("\n");
-        hoverText.append(Text.translatable("command.worldy.stafflist.uuid").formatted(isOnline ? Formatting.GREEN : Formatting.YELLOW))
-                .append(Text.translatable("command.worldy.stafflist.online." + (isOnline ? "online" : "offline")).formatted(isOnline ? Formatting.GREEN : Formatting.YELLOW));
+        hoverText.append(Text.translatable("command.worldy.stafflist.status").formatted(Formatting.GRAY))
+                .append(Text.translatable("command.worldy.stafflist." + (isOnline ? "online" : "offline")).formatted(isOnline ? Formatting.GREEN : Formatting.RED));
 
         if (member.isUnknown()) {
             hoverText.append(Text.translatable("command.worldy.stafflist.username_not_found").formatted(Formatting.RED));

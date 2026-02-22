@@ -36,14 +36,11 @@ public class WorldyClient implements ClientModInitializer {
                     GlobalCommand.register(),
                     LocalCommand.register(),
                     LocalCommand.registerAlias(),
-                    HomeCommand.register(),
-                    HomeCommand.registerAlias(),
                     SpawnTownCommand.register(),
                     SpawnTownCommand.registerAlias(),
                     SpawnNationCommand.register(),
                     IcemapCommand.register(),
                     VpCommand.register(),
-                    MaphereCommand.register(),
                     VoteCommand.register(),
                     RuleCommand.register()
             );
