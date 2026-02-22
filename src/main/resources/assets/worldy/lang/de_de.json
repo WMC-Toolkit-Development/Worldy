@@ -46,7 +46,6 @@
   "command.worldy.waypoint.usage_set": "Verwendung: /waypoint set <x> <y> <z>.",
   "command.worldy.waypoint.cleared": "Wegpunkt gelöscht.",
   "command.worldy.waypoint.info_set": "Wegpunkt derzeit auf %s, %s, %s gesetzt.",
-  "command.worldy.waypoint.info_empty": "Derzeit ist kein Wegpunkt aktiv.",
   "command.worldy.waypoint.no_active": "Kein Wegpunkt aktiv.",
   "command.worldy.waypoint.duplicate_name": "Ein Wegpunkt mit diesem Namen existiert bereits.",
   "command.worldy.waypoint.saved": "Wegpunkt '%s' bei %s, %s, %s (%s) gespeichert.",

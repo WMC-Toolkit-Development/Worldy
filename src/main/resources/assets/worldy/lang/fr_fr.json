@@ -46,7 +46,6 @@
   "command.worldy.waypoint.usage_set": "Utilisation : /waypoint set <x> <y> <z>.",
   "command.worldy.waypoint.cleared": "Point de repère supprimé.",
   "command.worldy.waypoint.info_set": "Point de repère actuellement défini sur %s, %s, %s.",
-  "command.worldy.waypoint.info_empty": "Aucun point de repère actif actuellement.",
   "command.worldy.waypoint.no_active": "Aucun point de repère actif.",
   "command.worldy.waypoint.duplicate_name": "Un point de repère avec ce nom existe déjà.",
   "command.worldy.waypoint.saved": "Point de repère '%s' enregistré à %s, %s, %s (%s).",

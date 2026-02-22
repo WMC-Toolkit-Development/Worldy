@@ -55,7 +55,7 @@ public class WaypointManager {
     }
 
     public static int infoWaypoint() {
-        CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint.info_" + (active() ? "set" : "empty"), Math.floor(target.x), Math.floor(target.y), Math.floor(target.z)).formatted(Formatting.GRAY));
+        CommandHelper.sendMessage(Text.translatable("command.worldy.waypoint." + (active() ? "info_set" : "no_active"), Math.floor(target.x), Math.floor(target.y), Math.floor(target.z)).formatted(Formatting.GRAY));
         return 1;
     }
 

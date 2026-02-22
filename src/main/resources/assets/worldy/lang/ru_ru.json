@@ -46,7 +46,6 @@
   "command.worldy.waypoint.usage_set": "Использование: /waypoint set <x> <y> <z>.",
   "command.worldy.waypoint.cleared": "Точка маршрута очищена.",
   "command.worldy.waypoint.info_set": "Точка маршрута установлена на %s, %s, %s.",
-  "command.worldy.waypoint.info_empty": "Активная точка маршрута отсутствует.",
   "command.worldy.waypoint.no_active": "Нет активной точки маршрута.",
   "command.worldy.waypoint.duplicate_name": "Точка маршрута с таким именем уже существует.",
   "command.worldy.waypoint.saved": "Точка маршрута '%s' сохранена в %s, %s, %s (%s).",

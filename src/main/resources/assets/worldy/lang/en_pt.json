@@ -46,7 +46,6 @@
   "command.worldy.waypoint.usage_set": "Usage: /waypoint set <x> <y> <z>, savvy?",
   "command.worldy.waypoint.cleared": "Waypoint tossed overboard.",
   "command.worldy.waypoint.info_set": "Waypoint set at %s, %s, %s.",
-  "command.worldy.waypoint.info_empty": "No waypoint be marked.",
   "command.worldy.waypoint.no_active": "No waypoint be active.",
   "command.worldy.waypoint.duplicate_name": "A waypoint by that name already sails.",
   "command.worldy.waypoint.saved": "Waypoint '%s' stashed at %s, %s, %s (%s).",
